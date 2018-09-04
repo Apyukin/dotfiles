@@ -1,0 +1,148 @@
+call plug#begin('~/.vim/plugged')
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'JamshedVesuna/vim-markdown-preview'
+Plug 'wlangstroth/vim-racket'
+Plug 'laoyang945/vimflowy'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'scrooloose/nerdtree'
+Plug 'vim-latex/vim-latex'
+Plug 'KeitaNakamura/tex-conceal.vim', {'for': 'tex'}
+" Plug 'jiangmiao/auto-pairs'
+" Plug 'vim-syntastic/syntastic'
+call plug#end()
+
+"latex
+let g:tex_flavor="latex"
+
+"used by tex-conceal
+let g:tex_conceal="abdgm"
+
+"used by vim-markdown-preview plugin
+let vim_markdown_preview_pandoc=1
+let vim_markdown_preview_browser="Google Chrome"
+
+"used by syntastic plugin
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
+
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_wq = 0
+"let g:syntastic_ignore_files = ['.*\.tex']
+
+"used by ultisnips
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<c-b>"
+let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips', 'UltiSnips']
+
+"used by auto-pairs
+"let g:AutoPairsShortcutJump="<C-n>"
+
+syntax enable
+set background=light
+let g:solarized_termcolors=256
+colorscheme solarized
+
+"spelling
+hi SpellBad    ctermfg=000 ctermbg=224
+
+set mouse=a
+set autoindent
+set smartindent
+set tabstop=2
+set shiftwidth=2
+set textwidth=120
+set number
+set showmatch
+set showcmd
+set expandtab
+
+set incsearch
+set ignorecase
+set smartcase
+set hlsearch
+set wildmenu
+
+set pastetoggle=;'
+set backspace=indent,eol,start
+
+vnoremap ,. :w !pbcopy<cr><cr>
+nnoremap ,. V:w !pbcopy<cr><cr>
+nnoremap ,/ mmggVG:w !pbcopy<cr><cr>'m
+nnoremap <space><space> :w<cr>
+nnoremap <space>d :NERDTreeToggle<cr>
+nnoremap <space>j :NERDTreeFocus<cr>
+nnoremap <space>f :Files<cr>
+nnoremap <C-l> :! opdf %<cr>
+
+set scrolloff=7
+nnoremap j gj
+nnoremap k gk
+nnoremap q :lclose<cr>
+
+augroup vimrc_autocmd
+  autocmd!
+"  autocmd FileType tex :NoMatchParen
+"  au FileType tex setlocal nocursorline
+  autocmd BufNewFile *.cpp :0r ~/.vim/cpp
+  autocmd BufNewFile *.cpp :w!
+  autocmd BufNewFile *.tex :0r ~/.vim/tex
+  autocmd BufNewFile *.tex :setlocal spell spelllang=en_us
+  autocmd BufNewFile *.tex :w!
+  autocmd BufNewFile *.md :0r ~/.vim/pandoc
+  autocmd BufNewFile *.md :w!
+  autocmd BufEnter *.md :$
+  autocmd BufNewFile *.rkt :0r ~/.vim/racket
+  autocmd BufNewFile *.rkt :w!
+  autocmd BufEnter *.rkt :$
+  autocmd BufEnter *.rkt :so ~/.vim/plugin/rainbow_parentheses.vim
+  autocmd BufEnter *.rkt :RainbowParenthesesToggle
+  autocmd BufRead,BufNewFile *.cc,*.c,*.cpp set cindent
+  autocmd BufNewFile,BufFilePre,BufRead *.md set filetype=pandoc
+augroup END
+
+inoremap jk <Esc>
+vnoremap jk <Esc>
+set timeoutlen=200
+
+set undodir=~/.vim/tmp
+set backupdir=~/.vim/tmp
+set directory=~/.vim/tmp
+set undofile
+set backup
+
+"shell
+"
+let $BASH_ENV = "~/.custom_commands.sh"
+
+"http://vim.wikia.com/wiki/Display_output_of_shell_commands_in_new_window 
+command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
+function! s:RunShellCommand(cmdline)
+  let isfirst = 1
+  let words = []
+  for word in split(a:cmdline)
+    if isfirst
+      let isfirst = 0  " don't change first word (shell command)
+    else
+      if word[0] =~ '\v[%#<]'
+        let word = expand(word)
+      endif
+      let word = shellescape(word, 1)
+    endif
+    call add(words, word)
+  endfor
+  let expanded_cmdline = join(words)
+  botright new
+  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+  call setline(1, 'You entered:  ' . a:cmdline)
+  call setline(2, 'Expanded to:  ' . expanded_cmdline)
+  call append(line('$'), substitute(getline(2), '.', '=', 'g'))
+  silent execute '$read !'. expanded_cmdline
+  1
+endfunction
