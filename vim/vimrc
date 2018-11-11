@@ -76,10 +76,9 @@ vnoremap ,. :w !pbcopy<cr><cr>
 nnoremap ,. V:w !pbcopy<cr><cr>
 nnoremap ,/ mmggVG:w !pbcopy<cr><cr>'m
 nnoremap <space><space> :w<cr>
-nnoremap <space>d :NERDTreeToggle<cr>
-nnoremap <space>j :NERDTreeFocus<cr>
+nnoremap <space>d :NERDTreeFocus<cr>
 nnoremap <space>f :Files<cr>
-nnoremap <C-l> :! opdf %<cr>
+nnoremap <C-l> :! opdfi %<cr>
 
 set scrolloff=7
 nnoremap j gj

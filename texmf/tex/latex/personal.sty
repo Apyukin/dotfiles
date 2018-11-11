@@ -1,0 +1,267 @@
+\ProvidesPackage{personal}
+\usepackage{amsmath,amssymb,amsthm}
+%%fakesection Argument processing
+\newif\ifyuvalsetup\yuvalsetuptrue
+\newif\ifyuvalpkg\yuvalpkgtrue
+\newif\ifyuvalauthor\yuvalauthortrue
+\newif\ifyuvalhref\yuvalhreftrue
+\newif\ifyuvalthm\yuvalthmtrue
+\newif\ifyuvalmdthm\yuvalmdthmtrue
+
+\DeclareOption{nosetup}{\yuvalsetupfalse}
+\DeclareOption{nopkg}{\yuvalpkgfalse}
+\DeclareOption{noauthor}{\yuvalauthorfalse}
+\DeclareOption{nohref}{\yuvalhreffalse}
+\DeclareOption{nothm}{\yuvalthmfalse}
+\DeclareOption{nomdthm}{\yuvalmdthmfalse}
+
+\ProcessOptions\relax
+
+%%fakesection Some macros
+
+% General
+\newcommand{\pa}[1]{\left(#1\right)}
+\newcommand{\bra}[1]{\left[#1\right]}
+
+\newcommand{\mat}[1]{\begin{matrix}#1\end{matrix}}
+\newcommand{\pmat}[1]{\pa{\mat{#1}}}
+\newcommand{\bmat}[1]{\bra{\mat{#1}}}
+
+\newcommand{\pfrac}[2]{\pa{\frac{#1}{#2}}}
+\newcommand{\bfrac}[2]{\bra{\frac{#1}{#2}}}
+
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceiling}[1]{\left\lceil #1 \right\rceil}
+
+\newcommand{\ol}{\overline}
+\newcommand{\ul}{\underline}
+
+\renewcommand{\d}[1]{\ensuremath{\operatorname{d}\!{#1}}}
+
+\newcommand{\lrarrow}{\leftrightarrow}
+\newcommand{\rarrow}{\rightarrow}
+\newcommand{\surjto}{\twoheadrightarrow}
+\newcommand{\injto}{\hookrightarrow}
+
+\DeclareMathOperator{\cis}{cis}
+\DeclareMathOperator*{\lcm}{lcm}
+
+\newcommand{\hrulebar}{
+  \par\hspace{\fill}\rule{0.95\linewidth}{.7pt}\hspace{\fill}
+  \par\nointerlineskip \vspace{\baselineskip}
+}
+
+%Inequalities
+\newcommand{\cycsum}{\sum_{\mathrm{cyc}}}
+\newcommand{\symsum}{\sum_{\mathrm{sym}}}
+\newcommand{\cycprod}{\prod_{\mathrm{cyc}}}
+\newcommand{\symprod}{\prod_{\mathrm{sym}}}
+
+% Abstract Algebra
+\newcommand{\CC}{\mathbb C}
+\newcommand{\FF}{\mathbb F}
+\newcommand{\NN}{\mathbb N}
+\newcommand{\QQ}{\mathbb Q}
+\newcommand{\RR}{\mathbb R}
+\newcommand{\ZZ}{\mathbb Z}
+
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\Inn}{Inn}
+\DeclareMathOperator{\Syl}{Syl}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\GL}{GL} % General linear group
+\DeclareMathOperator{\SL}{SL} % Special linear group
+
+% Geometry
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\dang}{\measuredangle} %% Directed angle
+\newcommand{\ray}[1]{\overrightarrow{#1}} 
+\newcommand{\seg}[1]{\overline{#1}}
+\newcommand{\arc}[1]{\wideparen{#1}}
+\newcommand{\dg}{^\circ}
+
+% Environments
+\newenvironment{soln}{\begin{proof}[Solution]}{\end{proof}}
+\newenvironment{gobble}{\setbox\z@\vbox\bgroup}{\egroup}
+\newenvironment{moral}{%
+	\begin{mdframed}[linecolor=green!70!black]%
+	\bfseries\color{green!70!black}}%
+	{\end{mdframed}}
+
+%%fakesection BEGIN MAIN SETUP
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifyuvalsetup
+	%%fakesection Set up author and date
+	\ifyuvalauthor
+    \usepackage{fancyhdr}
+    \setlength{\headwidth}{6in}
+    \pagestyle{fancy}
+    \lhead{Yuval Ohapkin}
+    \chead{}
+    \rhead{\today}
+	\fi
+	%%fakesection Hyperref
+	\ifyuvalpkg
+		\PassOptionsToPackage{usenames,svgnames,dvipsnames}{xcolor}
+		\usepackage{xcolor}
+		\ifyuvalhref
+			\usepackage[colorlinks=true]{hyperref}
+			\hypersetup{urlcolor=RubineRed,linkcolor=RoyalBlue,citecolor=ForestGreen}
+		\fi
+		\usepackage[nameinlink]{cleveref}
+	\fi
+
+	%%fakesection New Theorem Styles -- mdmainbox, mdsecbox, mdinlinebox
+	\ifyuvalmdthm
+		\usepackage{thmtools}
+		\usepackage[framemethod=TikZ]{mdframed}
+
+		\mdfdefinestyle{mdmainbox}{%
+			linewidth=0.5pt,
+			roundcorner = 1pt,
+			skipabove=12pt,
+			frametitleaboveskip=5pt,
+			frametitlebelowskip=0pt,
+			skipbelow=2pt,
+			frametitlefont=\bfseries,
+			innertopmargin=10pt,
+			innerbottommargin=8pt,
+      linecolor=brown,
+			nobreak=true,
+			backgroundcolor=Maroon!4,
+		}
+		\declaretheoremstyle[
+			headfont=\sffamily\bfseries\color{RawSienna},
+			mdframed={style=mdmainbox},
+			headpunct={\\[3pt]},
+			postheadspace={0pt}
+		]{thmmainbox}
+
+		\mdfdefinestyle{mdsecbox}{%
+			roundcorner = 2pt,
+      linewidth=0.5pt,
+			skipabove=12pt,
+			innerbottommargin=9pt,
+			innertopmargin=11pt,
+			skipbelow=2pt,
+			linecolor=gray,
+			nobreak=true,
+			backgroundcolor=Gray!5,
+		}
+		\declaretheoremstyle[
+			headfont=\bfseries\color{Gray},
+			mdframed={style=mdsecbox},
+			headpunct={\\[3pt]},
+			postheadspace={0pt},
+		]{thmsecbox}
+
+		\mdfdefinestyle{mdinlinebox}{%
+			skipabove=8pt,
+			linewidth=3pt,
+			rightline=false,
+			leftline=true,
+			topline=false,
+			bottomline=false,
+			linecolor=Apricot,
+			backgroundcolor=Apricot!2
+		}
+		\declaretheoremstyle[
+			headfont=\bfseries\color{Bittersweet},
+			bodyfont=\normalfont\small,
+			spaceabove=0pt,
+			spacebelow=0pt,
+			mdframed={style=mdinlinebox}
+		]{thminlinebox}
+
+		\newcommand{\listhack}{$\empty$\vspace{-2em}}
+	\fi
+
+	%%fakesection Theorem setup
+	\ifyuvalthm
+		\theoremstyle{plain}
+		\ifyuvalmdthm
+      \declaretheorem[style=thmmainbox,name=Theorem]{theorem}
+      \declaretheorem[style=thmmainbox,name=Lemma,sibling=theorem]{lemma}
+			\declaretheorem[style=thmmainbox,name=Proposition,sibling=theorem]{proposition}
+			\declaretheorem[style=thmsecbox,name=Corollary,sibling=theorem]{corollary}
+			\declaretheorem[style=thmmainbox,name=Theorem,numbered=no]{theorem*}
+			\declaretheorem[style=thmmainbox,name=Lemma,numbered=no]{lemma*}
+			\declaretheorem[style=thmmainbox,name=Proposition,numbered=no]{proposition*}
+			\declaretheorem[style=thmsecbox,name=Corollary,numbered=no]{corollary*}
+		\else
+			\newtheorem{theorem}{Theorem}
+			\newtheorem{lemma}[theorem]{Lemma}
+			\newtheorem{proposition}[theorem]{Proposition}
+			\newtheorem{corollary}[theorem]{Corollary}
+			\newtheorem*{theorem*}{Theorem}
+			\newtheorem*{lemma*}{Lemma}
+			\newtheorem*{proposition*}{Proposition}
+			\newtheorem*{corollary*}{Corollary}
+		\fi
+			
+		%Def-style theorems
+		\theoremstyle{definition}
+
+		\ifyuvalmdthm
+			\declaretheorem[style=thmmainbox,name=Algorithm,sibling=theorem]{algorithm}
+		\else
+			\newtheorem{algorithm}[theorem]{Algorithm}
+			\newtheorem*{algorithm*}{Algorithm}
+		\fi
+
+		\newtheorem{claim}[theorem]{Claim}
+		\newtheorem{conjecture}[theorem]{Conjecture}
+		\newtheorem{definition}[theorem]{Definition}
+		\newtheorem{fact}[theorem]{Fact}
+
+		\newtheorem{answer}[theorem]{Answer}
+		\newtheorem{case}[theorem]{Case}
+		\newtheorem{ques}[theorem]{Question}
+		\newtheorem{exercise}[theorem]{Exercise}
+		\newtheorem{problem}[theorem]{Problem}
+
+		\newtheorem*{answer*}{Answer}
+    \newtheorem*{recall*}{Recall..}
+		\newtheorem*{case*}{Case}
+		\newtheorem*{claim*}{Claim}
+		\newtheorem*{conjecture*}{Conjecture}
+		\newtheorem*{definition*}{Definition}
+		\newtheorem*{fact*}{Fact}
+		\newtheorem*{joke*}{Joke}
+		\newtheorem*{ques*}{Question}
+		\newtheorem*{exercise*}{Exercise}
+		\newtheorem*{problem*}{Problem}
+
+
+		\ifyuvalmdthm
+			\declaretheorem[style=thminlinebox,name=Example,sibling=theorem]{example}
+			\declaretheorem[style=thminlinebox,name=Example,numbered=no]{example*}
+		\else
+			\newtheorem{example}[theorem]{Example}
+			\newtheorem*{example*}{Example}
+		\fi
+
+		% Remark-style theorems
+		%\theoremstyle{remark}
+		\newtheorem{note}[theorem]{Note}
+		\newtheorem{remark}[theorem]{Remark}
+		\newtheorem*{note*}{Note}
+		\newtheorem*{remark*}{Remark}
+		\newtheorem{abuse}[theorem]{Abuse of Notation}
+		\newtheorem*{abuse*}{Abuse of Notation}
+	\fi
+
+	%%fakesection Loads a bunch of useful packages (but allow disabling)
+	\ifyuvalpkg
+		\usepackage{listings}
+		\usepackage{mathrsfs}
+		\usepackage{textcomp}
+    \usepackage{geometry}
+    \usepackage{graphicx}
+	\fi
+
+%%fakesection END MAIN SETUP
+\fi
